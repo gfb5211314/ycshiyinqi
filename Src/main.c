@@ -33,7 +33,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define  SQQ_VERSION             "SYQ_V1.00"
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -105,11 +105,18 @@ int main(void)
 //   eth_at_open(); //进入AT模式
 // 	 while(eth_init()!=1);
 	printf("123");
+  Init_Dev_Param(); 
 //while( eth_ring_net_in()!=1)   //接入服务器
 //	 {
 //		 
 //		 
 //	 }
+//    while(1)
+//		{
+//        test_flash();
+//			HAL_Delay(1000);
+//			HAL_Delay(1000);
+//		}
 	  led_flag=1;
 		usart1_DMA_START();
 	printf("1234");
