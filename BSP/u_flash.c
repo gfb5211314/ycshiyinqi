@@ -81,7 +81,7 @@ void Flash_Read_Word( uint32_t ReadAddr, uint32_t *pBuffer, uint32_t NumToRead )
 	{
 		pBuffer[i]=STMFLASH_ReadWord(ReadAddr);//读取4个字节.
 		ReadAddr+=4;//偏移4个字节.	
-		    printf("read data 0x%x OK\n", *(pBuffer+i));
+		  //  printf("read data 0x%x OK\n", *(pBuffer+i));
 	}
 }
 uint32_t ab[2]={0x12345678,0x66778899};
@@ -99,16 +99,31 @@ extern uint32_t factory;
 void Init_Dev_Param()
 {
 	
-	Flash_Read_Word( SN_ADDR_FLASH,(uint32_t *)sn_code,2 ) ;
+	Flash_Read_Word( SN_ADDR_FLASH,(uint32_t *)sn_code,4) ;
 
-	Flash_Read_Word( FACTORY_ADDR_FLASH, (uint32_t *)factory,1 ) ;	
+	Flash_Read_Word( FACTORY_ADDR_FLASH, (uint32_t *)&factory,1 ) ;	
 	   while(factory!=1)
 		 {
 			   process_usart_data();			 
 		 }
 			HAL_Delay(1000);
 		  HAL_Delay(1000);
+		 	HAL_Delay(1000);
+		  HAL_Delay(1000);
+	
 			send_string_to_eth(sn_code,12);
+		 	HAL_Delay(1000);
+		 send_string_to_eth(sn_code,12);
+		  HAL_Delay(1000);
+		
+		  send_string_to_eth(sn_code,12);
+		 	HAL_Delay(1000);
+		  send_string_to_eth((uint8_t*)SQQ_VERSION,sizeof(SQQ_VERSION));
+		 	HAL_Delay(1000);
+		  HAL_Delay(1000);
+		 	HAL_Delay(1000);
+		  HAL_Delay(1000);
+		  
 	
 }
 

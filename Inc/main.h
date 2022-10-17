@@ -37,7 +37,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+#define  SQQ_VERSION             "SYQ_V1.01"
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
