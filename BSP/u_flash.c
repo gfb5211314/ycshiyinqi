@@ -8,7 +8,7 @@
 
 
 void STMFLASH_Write(uint32_t WriteAddr, uint32_t *pBuffer, uint32_t NumToWrite)	;
-uint8_t sn_code[16];
+uint8_t dev_sn_code[16];
 uint8_t STM32G0_GetFlashSector(uint32_t addr){
 	if (addr >= FLASH_SECTOR14_START && addr <= FLASH_SECTOR14_END){
 		return 14;
@@ -88,41 +88,42 @@ uint32_t ab[2]={0x12345678,0x66778899};
 uint32_t ac[2];
 void test_flash()
 {
-	 memcpy(sn_code, SN_CODE, 16);
-	STMFLASH_Write(SN_ADDR_FLASH, (uint32_t *)sn_code, 2);
+	 memcpy(dev_sn_code, SN_CODE, 16);
+	STMFLASH_Write(SN_ADDR_FLASH, (uint32_t *)dev_sn_code, 2);
 	
 	Flash_Read_Word( SN_ADDR_FLASH, ac,2 ) ;
 	  printf("read data 0x%x OK\n", *ac);
 	 printf("read data 0x%x OK\n", *(ac+1));
 }
+#include "bsp_usart1.h"
 extern uint32_t factory;
+extern BSP_UASRT1_TYPE   BSP_UASRT1_ST;
 void Init_Dev_Param()
 {
 	
-	Flash_Read_Word( SN_ADDR_FLASH,(uint32_t *)sn_code,4) ;
+	Flash_Read_Word( SN_ADDR_FLASH,(uint32_t *)dev_sn_code,3) ;
 
 	Flash_Read_Word( FACTORY_ADDR_FLASH, (uint32_t *)&factory,1 ) ;	
 	   while(factory!=1)
 		 {
 			   process_usart_data();			 
 		 }
-			HAL_Delay(1000);
-		  HAL_Delay(1000);
-		 	HAL_Delay(1000);
-		  HAL_Delay(1000);
+
 	
-			send_string_to_eth(sn_code,12);
-		 	HAL_Delay(1000);
-		 send_string_to_eth(sn_code,12);
-		  HAL_Delay(1000);
+//			send_string_to_eth(sn_code,12);
+//		 	HAL_Delay(1000);
+//		 send_string_to_eth(sn_code,12);
+//		  HAL_Delay(1000);
 		
-		  send_string_to_eth(sn_code,12);
+		  send_string_to_eth(dev_sn_code,12);
 		 	HAL_Delay(1000);
 		  send_string_to_eth((uint8_t*)SQQ_VERSION,sizeof(SQQ_VERSION));
-		 	HAL_Delay(1000);
-		  HAL_Delay(1000);
-		 	HAL_Delay(1000);
-		  HAL_Delay(1000);
+		 		 for(uint16_t j=0;j<12;j++)
+		 {
+			 BSP_UASRT1_ST.tem_RX_pData[j]=dev_sn_code[j];
+			//  BSP_UASRT1_ST.tem_RX_pData[i]=0x55;
+		 }
+		 
 		  
 	
 }

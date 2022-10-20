@@ -126,9 +126,10 @@ uint8_t atk_eth_send_cmd(uint8_t *cmd,uint8_t *ack,uint32_t waittime)
 //开启DMA接收空闲中断
 void  ETH_DMA_START()
 {
+	  __HAL_UART_ENABLE_IT(&eth_usart, UART_IT_IDLE);
    HAL_UART_Receive_DMA(&eth_usart,(uint8_t *)ether_st.RX_pData, 50);  //不能启动打开
-    __HAL_UART_ENABLE_IT(&eth_usart, UART_IT_IDLE);
-//		HAL_UART_Receive_IT(&wifi_usart,ESP8266_temp.RX_pData,1);		// 重新使能串口2接收中断
+  
+
 }
 //开启接收空闲中断
 void  ETH_UsartReceive_IDLE()
@@ -454,7 +455,7 @@ uint8_t  eth_ring_net_in()
 	 }
 	  return net_ta;
 }
-extern uint8_t sn_code[16];
+extern uint8_t dev_sn_code[16];
 uint32_t factory=0;
 
 void process_usart_data()
@@ -467,26 +468,19 @@ void process_usart_data()
 			 ether_st.RX_flag=0;
 			 ether_st.RX_Size=0;
 		 }
-	//	send_string_to_eth(ether_st.RX_pData,ether_st.RX_Size);
 		if(strncmp((char *)ether_st.RX_pData,"sn:",3)==0)
 		{
 			
 			
 			for(uint16_t i=0;i<12;i++)
 			{
-			  //printf("sn=%c",ether_st.RX_pData[i+3]) ; 
-				sn_code[i]=ether_st.RX_pData[i+3];
+				dev_sn_code[i]=ether_st.RX_pData[i+3];
 			}		
         
-    	 STMFLASH_Write(SN_ADDR_FLASH,   (uint32_t *)sn_code,3 );
-	     Flash_Read_Word( SN_ADDR_FLASH, (uint32_t *)sn_code,3 ) ;
+    	 STMFLASH_Write(SN_ADDR_FLASH,   (uint32_t *)dev_sn_code,2 );
+	     Flash_Read_Word( SN_ADDR_FLASH, (uint32_t *)dev_sn_code,4 ) ;
 			
-//			for(uint16_t i=0;i<12;i++)
-//			{
-//			  printf("sn=%c",sn_code[i]) ; 
-//			
-//			}	
-			send_string_to_eth(sn_code,12);
+			send_string_to_eth(dev_sn_code,12);
 		}
 			else	if(strncmp((char *)ether_st.RX_pData, "exit factory",4)==0)
 		{

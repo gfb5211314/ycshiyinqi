@@ -5,7 +5,7 @@
 #include "usart.h"
 
 #define  shiyinqi_usart        huart1
-#define  data_len_shiyin 800
+#define  data_len_shiyin 1024
 
 typedef struct
 {

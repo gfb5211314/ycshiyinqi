@@ -13,8 +13,9 @@ int fputc(int ch, FILE *f)
 //DMA开启
 void  usart1_DMA_START()
 {
+	  __HAL_UART_ENABLE_IT(&bsp_usart1, UART_IT_IDLE); //打开串口空闲中断
    HAL_UART_Receive_DMA(&bsp_usart1,(uint8_t *)BSP_UASRT1_ST.RX_pData,50);  //??????
-    __HAL_UART_ENABLE_IT(&bsp_usart1, UART_IT_IDLE); //打开串口空闲中断
+  
 //	  __HAL_DMA_DISABLE_IT(hdma, DMA_IT_HT);   //打开dma 半传输中断
 //		HAL_UART_Receive_IT(&wifi_usart,ESP8266_temp.RX_pData,1);		// ??????2????
 }
@@ -106,6 +107,7 @@ void enen1()
 	
 
 }
+extern uint8_t dev_sn_code[16];
 void data_send()
 {
 //	 if(count_flaf1==1)
@@ -119,7 +121,7 @@ void data_send()
 ////		 HAL_UART_Transmit(&huart1, (uint8_t *)er8, 640, 0xffffff);
 //		   count_flaf1=0;
 //	 }
-	 if(BSP_UASRT1_ST.RX_flag==1)
+	/* if(BSP_UASRT1_ST.RX_flag==1)
 	 {
 //      BSP_UASRT1_ST.tem_RX_pData[0]=0xfe;
 //		  BSP_UASRT1_ST.tem_RX_pData[1]=0xef;
@@ -133,6 +135,25 @@ void data_send()
 //		 BSP_UASRT1_STa.tem_RX_pData[BSP_UASRT1_ST.RX_Size+3]=0xfe;
 //	  HAL_UART_Transmit_DMA(&huart2,(uint8_t *)BSP_UASRT1_ST.tem_RX_pData,BSP_UASRT1_ST.RX_Size+2+2);	
 		 HAL_UART_Transmit_DMA(&huart2,(uint8_t *)BSP_UASRT1_ST.RX_pData,BSP_UASRT1_ST.RX_Size);
+
+		 BSP_UASRT1_ST.RX_flag=0;
+		 
+	 }*/
+	 
+	 	 if(BSP_UASRT1_ST.RX_flag==1)
+	 {
+
+		
+		 for(uint16_t i=0;i<BSP_UASRT1_ST.RX_Size;i++)
+		 {
+			 BSP_UASRT1_ST.tem_RX_pData[i+12]=BSP_UASRT1_ST.RX_pData[i];
+			 
+		 }
+	
+//		 BSP_UASRT1_ST.tem_RX_pData[BSP_UASRT1_ST.RX_Size+2]=0xef;
+//		 BSP_UASRT1_STa.tem_RX_pData[BSP_UASRT1_ST.RX_Size+3]=0xfe;
+//	  HAL_UART_Transmit_DMA(&huart2,(uint8_t *)BSP_UASRT1_ST.tem_RX_pData,BSP_UASRT1_ST.RX_Size+2+2);	
+		 HAL_UART_Transmit_DMA(&huart2,(uint8_t *)BSP_UASRT1_ST.tem_RX_pData,(BSP_UASRT1_ST.RX_Size+12));
 
 		 BSP_UASRT1_ST.RX_flag=0;
 		 

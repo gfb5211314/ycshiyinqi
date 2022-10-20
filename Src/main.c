@@ -99,8 +99,11 @@ int main(void)
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
 //	 reset_ethdevinit();
+			 HAL_GPIO_WritePin(SYS_LIGHT_Pin_GPIO_Port, SYS_LIGHT_Pin_Pin,GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(NET_LIGHT_GPIO_Port, NET_LIGHT_Pin,GPIO_PIN_RESET);
     ETH_Rst();
    ETH_DMA_START();
+	   led_flag=1;
 //   eth_at_open(); //进入AT模式
 // 	 while(eth_init()!=1);
 	//printf("123");
@@ -116,7 +119,7 @@ int main(void)
 //			HAL_Delay(1000);
 //			HAL_Delay(1000);
 //		}
-	  led_flag=1;
+	  
 		usart1_DMA_START();
 	   //printf("1234");
 //  shiqinqi_DMA_START();
@@ -129,10 +132,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  	app_task_run();
-//  HAL_UART_Receive_DMA(&shiyinqi_usart,(uint8_t *)shiyinqi_st.RX_pData, 700);  //不能启动打开
-//       HAL_Delay(1000);
-//			HAL_UART_Transmit_DMA(&huart1, (uint8_t *)ab,4);
 		  data_send();
   }
   /* USER CODE END 3 */
@@ -230,6 +229,7 @@ void SysTick_Handler(void)
 			
 			
 		}
+
 			if(eth_ack_flag==1)
 	{
 		eth_ack_count++;
